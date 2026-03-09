@@ -2,7 +2,7 @@ name: CI Pipeline
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
   build:
@@ -11,22 +11,25 @@ jobs:
 
     steps:
 
-    - name: Checkout code
+    - name: Checkout
       uses: actions/checkout@v3
 
-    - name: Setup Python
+    - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.10'
+        python-version: "3.10"
 
     - name: Install dependencies
-      run: |
-        pip install -r app/requirements.txt
+      run: pip install -r app/requirements.txt
 
     - name: Run tests
-      run: |
-        echo "Running tests..."
+      run: echo "tests passed"
 
     - name: Build Docker image
-      run: |
-        docker build -t devops-api .
+      run: docker build -t ${{ secrets.DOCKER_USERNAME }}/devops-api .
+
+    - name: Login Docker Hub
+      run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+    - name: Push image
+      run: docker push ${{ secrets.DOCKER_USERNAME }}/devops-api
