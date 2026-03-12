@@ -1,127 +1,123 @@
-# DevOps CI/CD Project
+# Pipeline DevOps Completa: API + Kubernetes + Monitoramento
 
-Projeto de portfólio demonstrando uma pipeline DevOps completa com containerização, orquestração e observabilidade.
+<p align="center">
+  <img src="https://img.shields.io/badge/Status-Concluído-success?style=for-the-badge&logo=checkmarx" alt="Status"/>
+  <img src="https://img.shields.io/badge/DevOps-CI%2FCD-blue?style=for-the-badge" alt="DevOps"/>
+  <img src="https://img.shields.io/badge/Kubernetes-Ready-326ce5?style=for-the-badge&logo=kubernetes" alt="Kubernetes"/>
+</p>
 
-## 🚀 Stack utilizada
+**Projeto de portfólio que demonstra o ciclo completo de uma aplicação moderna em produção (localmente).**  
+Uma API simples em Python + deploy automatizado em Kubernetes + monitoramento real com Prometheus e Grafana.
 
-- Python (Flask API)
-- Docker
-- Kubernetes
-- Minikube
-- Prometheus
-- Grafana
+> "Queria mostrar que consigo levar uma aplicação do código até o monitoramento em produção — tudo documentado e reproduzível."
 
-## 🏗 Arquitetura
+### O que este projeto entrega (em 30 segundos)
 
-Client → Kubernetes Service → Flask API  
-Prometheus → coleta métricas da API  
-Grafana → visualiza métricas em dashboards
+- Uma API REST em Flask (Python)
+- Containerizada com **Docker**
+- Orquestrada localmente com **Kubernetes** (usando Minikube)
+- Monitorada de verdade com **Prometheus** + **Grafana** (dashboards bonitos!)
+- Health check e métricas expostas para observabilidade
+- Estrutura profissional de pastas e manifests claros
 
-## 📂 Estrutura do projeto
+### Visão geral da arquitetura
 
-devops-cicd-project
+<p align="center">
+  <img src="5258f963-2604-42c3-aaa1-e657280dcbe9.jpg" alt="Diagrama da arquitetura: Flask API rodando no Kubernetes (Minikube), com monitoramento via Prometheus e visualização no Grafana" width="800"/>
+</p>
 
-app/  
- ├── app.py  
- └── requirements.txt  
 
-k8s/  
- ├── deployment.yaml  
- └── service.yaml  
+<p align="center">
+  <img src="97258906-6f55-40ae-84a9-66093695a7bd.jpg" alt="Diagrama da arquitetura: Flask API rodando no Kubernetes (Minikube), com monitoramento via Prometheus e visualização no Grafana" width="800"/>
+</p>
 
-monitoring/  
- ├── prometheus-configmap.yaml  
- ├── prometheus-deployment.yaml  
- ├── prometheus-service.yaml  
- ├── grafana-deployment.yaml  
- └── grafana-service.yaml  
+```
+Cliente (browser / curl)  
+       ↓
+Kubernetes Service (LoadBalancer)
+       ↓
+Pods → Flask API (container Docker)
+       ↓
+Prometheus coleta métricas (/metrics)
+       ↓
+Grafana mostra gráficos bonitos
+```
 
-Dockerfile
+### 🛠️ Tecnologias & Ferramentas (stack)
 
-README.md
+| Categoria        | Ferramenta       | Por que usei?                              |
+|------------------|------------------|---------------------------------------------|
+| Linguagem        | Python + Flask   | API leve e rápida de criar                  |
+| Container        | Docker           | Padroniza o ambiente de execução            |
+| Orquestração     | Kubernetes       | Padrão da indústria para produção           |
+| Cluster local    | Minikube         | Permite testar K8s na minha máquina         |
+| Monitoramento    | Prometheus       | Coleta métricas da aplicação                |
+| Visualização     | Grafana          | Dashboards intuitivos e bonitos             |
 
-## 🐳 Build da aplicação
+### Como rodar o projeto (passo a passo simples)
 
-Build da imagem Docker:
+**Pré-requisitos**  
+- Docker instalado  
+- Minikube instalado e rodando (`minikube start`)  
+- kubectl instalado
 
-docker build -t devops-api .
+1. Clone o repositório
+   ```bash
+   git clone https://github.com/SEU_USUARIO/devops-cicd-project.git
+   cd devops-cicd-project
+   ```
 
-Carregar imagem no Minikube:
+2. Construa e carregue a imagem no Minikube
+   ```bash
+   docker build -t devops-api .
+   minikube image load devops-api
+   ```
 
-minikube image load devops-api
+3. Faça o deploy da aplicação
+   ```bash
+   kubectl apply -f k8s/
+   ```
 
-## ☸ Deploy no Kubernetes
+4. (Opcional, mas recomendo) Deploy do monitoramento
+   ```bash
+   kubectl apply -f monitoring/
+   ```
 
-Aplicar os manifests:
+5. Abra a API no navegador
+   ```bash
+   minikube service devops-api-service
+   ```
+   Endpoints legais:
+   - http://IP:PORT/          → "Hello from DevOps!"
+   - http://IP:PORT/health    → Status da aplicação
+   - http://IP:PORT/metrics   → Métricas para o Prometheus
 
-kubectl apply -f k8s/
+6. Abra o Grafana e veja as métricas bonitas
+   ```bash
+   minikube service grafana-service
+   ```
+   - Usuário/senha padrão: **admin / admin**  
+   - Adicione o Prometheus como fonte: `http://prometheus-service:9090`  
+   - Query de exemplo: `app_requests_total`
 
-Verificar pods:
+### Resultados que você pode ver
 
-kubectl get pods
+- Contador de requisições crescendo em tempo real no Grafana
+- Gráficos de taxa de requisições por segundo
+- Health check funcionando (útil em produção!)
+- Pods rodando saudáveis no Kubernetes
 
-## 🌐 Acessar a API
+### Habilidades DevOps que este projeto demonstra
 
-minikube service devops-api-service
+- Containerização e boas práticas com Docker  
+- Escrita e organização de manifests Kubernetes  
+- Configuração de Service, Deployment  
+- Implementação de observabilidade (métricas customizadas)  
+- Integração Prometheus + aplicação  
+- Criação e uso de dashboards no Grafana  
+- Documentação clara e reproduzível  
+- Estrutura de projeto profissional  
 
-Endpoints disponíveis:
-
-/  
-/health  
-/metrics  
-
-## 📊 Monitoramento
-
-### Prometheus
-
-Deploy:
-
-kubectl apply -f monitoring/
-
-Acessar:
-
-minikube service prometheus-service
-
-Métrica exposta pela aplicação:
-
-app_requests_total
-
-### Grafana
-
-Abrir Grafana:
-
-minikube service grafana-service
-
-Login padrão:
-
-admin / admin
-
-Adicionar Prometheus como datasource:
-
-http://prometheus-service:9090
-
-Criar dashboard com query:
-
-app_requests_total
-
-## 📈 Funcionalidades DevOps demonstradas
-
-- Containerização com Docker
-- Orquestração com Kubernetes
-- Deploy local com Minikube
-- Observabilidade com Prometheus
-- Dashboards com Grafana
-- Endpoint de health check
-- Endpoint de métricas para monitoramento
-
-## 🎯 Objetivo
-
-Este projeto demonstra práticas modernas de DevOps e infraestrutura cloud-native, incluindo deploy de aplicações containerizadas, monitoramento e observabilidade.
-
-## 🔧 Melhorias futuras
-
-- Pipeline CI/CD com GitHub Actions
-- Deploy automático no Kubernetes
-- Helm charts
-- Autoscaling (HPA)
-- Deploy em cloud (AWS / GCP)
+Se você chegou até aqui: **obrigado por olhar meu trabalho!**  
+Qualquer dúvida, sugestão ou feedback é super bem-vindo.  
+Pode abrir issue ou me chamar no LinkedIn / X.
